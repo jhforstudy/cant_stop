@@ -1,13 +1,10 @@
 from player import Player
-from map import Map
 from game import Game
 
 
-player1 = Player()
-player2 = Player()
-player3 = Player()
-map = Map()
+player1 = Player(0)
+player2 = Player(1)
+player3 = Player(2)
 
-game = Game(player1, player2, player3, map)
-
+game = Game(player1, player2, player3)
 game.main()
