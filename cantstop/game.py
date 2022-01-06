@@ -15,7 +15,7 @@ class Game:
                     4: [0,0,0], 
                     5: [0,0,0], 
                     6: [0,0,0],
-                    7: [4,1,12], 
+                    7: [0,0,0], 
                     8: [0,0,0], 
                     9: [0,0,0], 
                     10: [0,0,0],
@@ -155,6 +155,14 @@ class Game:
             for i in self.now_p:
                 if self.mountain_top[i]:
                     self.now_p[i] = 0
+            
+            # 정상에 도달한 플레이어가 더 앞으로 갈수 없도록 함
+            for i in range(2,8):
+                top = 2*i - 1
+                if self.now_p[i] > top:
+                    self.now_p[i] = top
+                elif self.now_p[14-i] > top:
+                    self.now_p[14-i] = top
 
             self.showmap()
 
