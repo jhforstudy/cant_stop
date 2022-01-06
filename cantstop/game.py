@@ -2,7 +2,7 @@ import random
 import time
 import os
 from player import Player
-from logo import color1, color2, color3, color4
+from logo import color1, color2, color3, color4, color5
 WINSCORE = 3
 
 class Game:
@@ -15,7 +15,7 @@ class Game:
                     4: [0,0,0], 
                     5: [0,0,0], 
                     6: [0,0,0],
-                    7: [0,0,0], 
+                    7: [4,1,12], 
                     8: [0,0,0], 
                     9: [0,0,0], 
                     10: [0,0,0],
@@ -35,6 +35,20 @@ class Game:
                         11:0,
                         12:0,
                         }
+
+        self.mountain_top = {  2:False,
+                                3:False,
+                                4:False,
+                                5:False,
+                                6:False,
+                                7:False,
+                                8:False,
+                                9:False,
+                                10:False,
+                                11:False,
+                                12:False,
+                                }
+
         self.now_player = 0
         time.sleep(1)
 
@@ -93,8 +107,20 @@ class Game:
                 if self.numberofp() == 2: # 말의 개수가 2개이면, 둘 중 하나를 선택해서 놔야 함
                     print("2개 이상의 말을 놓을 수 없습니다. 어떤 말을 선택하시겠습니까?")
                     time.sleep(1)
-                    c = int(input(f"{choice[0]} = 1 입력, {choice[1]} = 2 입력: "))
-                    c -= 1
+
+                    while True:
+                        try:
+                            c = int(input(f"{choice[0]} = 1 입력, {choice[1]} = 2 입력: "))
+                            c -= 1 
+                            if self.mountain_top[choice[c]]:
+                                print("이미 정상에 오른 등산로입니다.")
+                                time.sleep(1)
+                                raise IndexError
+                            break
+                        except IndexError:
+                            print("잘못 선택했습니다. 다시 선택하시오.")
+
+                    # choice[c] : [3,7] 중 3 선택
                     if start_position[choice[c]]:
                         self.now_p[choice[c]] += self.map[choice[c]][player.id] + 1
                         start_position[choice[c]] = False
@@ -125,6 +151,11 @@ class Game:
                 time.sleep(1)
                 break
 
+            # 만약 정상에 도달한 플레이어가 있으면, now_p 삭제
+            for i in self.now_p:
+                if self.mountain_top[i]:
+                    self.now_p[i] = 0
+
             self.showmap()
 
             print("계속 진행하시겠습니까? 아니면 베이스캠프를 세우시겠습니까?")
@@ -133,7 +164,7 @@ class Game:
             if gostop == 1:
                 continue
             else: 
-                print("베이스캠프를 세우고 턴을 종료합니다.")
+                print("\n베이스캠프를 세우고 턴을 종료합니다.")
                 time.sleep(1)
 
                 if self.checktop():
@@ -143,7 +174,8 @@ class Game:
                             self.now_p[i] = n
                             self.map[i] = [0,0,0]
                             self.map[i][player.id] = n
-                            print(f"정상에 등반했습니다.\n")
+                            self.mountain_top[i] = True
+                            print(f"\n{i}칸 정상에 등반했습니다.\n")
                             time.sleep(2)
                             player.score += 1
 
@@ -151,7 +183,8 @@ class Game:
                             self.now_p[14-i] = n
                             self.map[14-i] = [0,0,0]
                             self.map[14-i][player.id] = n
-                            print(f"정상에 등반했습니다.\n")
+                            self.mountain_top[14-i] = True
+                            print(f"{14-i}칸 정상에 등반했습니다.\n")
                             time.sleep(2)
                             player.score += 1
 
@@ -175,6 +208,8 @@ class Game:
         for i in range(2,8):
             if self.now_p[i] != 0:
                 print(color4(f"{i}\t: "), end='')
+            elif self.mountain_top[i]:
+                print(color5(f"{i}\t: "), end='')
             else:
                 print(f"{i}\t: ", end='')
             n = 2 * (i-1)
@@ -199,6 +234,8 @@ class Game:
         for i in range(8,13):
             if self.now_p[i] != 0:
                 print(color4(f"{i}\t: "), end='')
+            elif self.mountain_top[i]:
+                print(color5(f"{i}\t: "), end='')
             else:
                 print(f"{i}\t: ", end='')
             n = 2 * (13-i)

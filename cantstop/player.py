@@ -23,8 +23,13 @@ class Player:
         print(f"주사위: {dice1} {dice2} {dice3} {dice4}")
         print(f"조합 : {groups}")
         
-        choice = int(input("조합을 선택하시오: "))
-        your_choice = groups[choice-1]
+        while True:
+            try:
+                choice = int(input("\n조합을 선택하시오: "))
+                your_choice = groups[choice-1]
+                break
+            except:
+                print("잘못 선택했습니다. 조합을 다시 선택하시오.")
 
         return your_choice
 
