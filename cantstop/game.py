@@ -5,6 +5,7 @@ from player import Player
 from logo import color1, color2, color3, color4, color5, color6
 WINSCORE = 3
 
+
 class Game:
     def __init__(self, player_num, players) -> None:
         self.players = players
@@ -114,7 +115,7 @@ class Game:
                                 time.sleep(1)
                                 raise IndexError
                             break
-                        except IndexError:
+                        except:
                             print("잘못 선택했습니다. 다시 선택하시오.")
 
                     # choice[c] : [3,7] 중 3 선택
@@ -164,16 +165,21 @@ class Game:
             self.showmap()
 
             print("계속 진행하시겠습니까? 아니면 베이스캠프를 세우시겠습니까?")
-            gostop = int(input("GO = 1, STOP = 2 : "))
+            while True:
+                try:
+                    gostop = int(input("GO = 1, STOP = 2 : "))
+                    break
+                except:
+                    print("잘못 선택했습니다. 다시 선택하시오.\n")
 
             if gostop == 1:
                 continue
-            else: 
+            else:
                 print("\n베이스캠프를 세우고 턴을 종료합니다.")
                 time.sleep(1)
 
                 if self.checktop():
-                    for i in range(2,8):
+                    for i in range(2,7):
                         n = 2*i - 1
                         if self.now_p[i] >= n:
                             self.now_p[i] = n
@@ -184,7 +190,7 @@ class Game:
                             time.sleep(2)
                             player.score += 1
 
-                        elif self.now_p[14-i] >= n:
+                        if self.now_p[14-i] >= n:
                             self.now_p[14-i] = n
                             self.map[14-i] = [0,0,0,0]
                             self.map[14-i][player.id] = n
@@ -192,6 +198,15 @@ class Game:
                             print(f"{14-i}칸 정상에 등반했습니다.\n")
                             time.sleep(2)
                             player.score += 1
+                    
+                    if self.now_p[7] >= 13:
+                        self.now_p[7] = 13
+                        self.map[7] = [0,0,0,0]
+                        self.map[7][player.id] = n
+                        self.mountain_top[7] = True
+                        print(f"{7}칸 정상에 등반했습니다.\n")
+                        time.sleep(2)
+                        player.score += 1
 
                 # make a basecamp
                 for i in self.now_p: #map 리스트 에 now_p의 값으로 변경
@@ -201,14 +216,12 @@ class Game:
                 break
 
         #after 1 round
-
-        for i in self.now_p: #now_p 초기화
-            self.now_p[i] = 0
+        for i in self.now_p:
+            self.now_p[i] = 0  #now_p 초기화
         
         self.showmap()
 
     def showmap(self):
-        
         os.system('cls')    # 화면 클리어
         for i in range(2,8):
             if self.now_p[i] != 0:
@@ -232,7 +245,10 @@ class Game:
                     print("●", end='')
 
                 if j+1 not in self.map[i] and self.now_p[i] != j+1:
-                    print("_", end='')
+                    if self.mountain_top[i]:
+                        print(color5("_"), end='')
+                    else:
+                        print("_", end='')
 
                 print(end='\t')
 
@@ -260,7 +276,10 @@ class Game:
                     print("●", end='')
 
                 if j+1 not in self.map[i] and self.now_p[i] != j+1:
-                    print("_", end='')
+                    if self.mountain_top[i]:
+                        print(color5("_"), end='')
+                    else:
+                        print("_", end='')
 
                 print(end='\t')
             
@@ -313,7 +332,7 @@ class Game:
 
     def checkwin(self, player: Player):
         if player.score >= WINSCORE:
-            a = input(f"Player {player.id+1}이 승리하였습니다.")
+            print(f"Player {player.id+1}이 승리하였습니다.")
 
     def next_player(self):
         self.now_player = (self.now_player + 1) % self.player_num
@@ -345,14 +364,12 @@ class Game:
             #         break
             #     self.now_player = 1
 
-def main():
+         
+if __name__ == "__main__":
     p1 = Player(0)
     p2 = Player(1)
     p3 = Player(2)
 
-    game = Game(p1,p2,p3)
+    game = Game(3, [p1, p2, p3])
     game.main()
-    #game.showmap()
-         
-if __name__ == "__main__":
-    main()
+    game.showmap()
