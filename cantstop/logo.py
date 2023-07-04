@@ -7,7 +7,7 @@ def printlogo():
     print(" \____/ \__,_||_| |_|    \__|   \____/  \__| \___/ | .__/ ")
     print("                                                   | |    ")
     print("                                                   |_|    ")
-    print("Ver 2.0.2.\n")
+    print("Ver 2.1.0.\n")
 
 def color1(string):
     return ("\033[92m" + string + "\033[37m")
@@ -23,3 +23,6 @@ def color4(string):
 
 def color5(string):
     return ("\033[90m" + string + "\033[37m")
+
+def color6(string):
+    return ("\033[91m" + string + "\033[37m")

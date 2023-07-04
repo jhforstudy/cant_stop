@@ -4,7 +4,7 @@ class Player:
     def __init__(self, id) -> None:
         self.id = id
         self.score = 0
-        self.player_name = input(f"Player {id+1}의 이름을 입력하시오. : ")
+        self.player_name = input(f"Player {id+1}의 이름을 입력하시오 : ")
         self.basecamp = {2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0}
         pass
         

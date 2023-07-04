@@ -2,25 +2,24 @@ import random
 import time
 import os
 from player import Player
-from logo import color1, color2, color3, color4, color5
+from logo import color1, color2, color3, color4, color5, color6
 WINSCORE = 3
 
 class Game:
-    def __init__(self, player1, player2, player3) -> None:
-        self.p1 = player1
-        self.p2 = player2
-        self.p3 = player3
-        self.map = {2: [0,0,0], 
-                    3: [0,0,0], 
-                    4: [0,0,0], 
-                    5: [0,0,0], 
-                    6: [0,0,0],
-                    7: [0,0,0], 
-                    8: [0,0,0], 
-                    9: [0,0,0], 
-                    10: [0,0,0],
-                    11: [0,0,0],
-                    12: [0,0,0]
+    def __init__(self, player_num, players) -> None:
+        self.players = players
+        self.player_num = player_num
+        self.map = {2: [0,0,0,0], 
+                    3: [0,0,0,0], 
+                    4: [0,0,0,0], 
+                    5: [0,0,0,0], 
+                    6: [0,0,0,0],
+                    7: [0,0,0,0], 
+                    8: [0,0,0,0], 
+                    9: [0,0,0,0], 
+                    10: [0,0,0,0],
+                    11: [0,0,0,0],
+                    12: [0,0,0,0]
                     }
 
         self.now_p = {  2:0,
@@ -36,7 +35,7 @@ class Game:
                         12:0,
                         }
 
-        self.mountain_top = {  2:False,
+        self.mountain_top = {   2:False,
                                 3:False,
                                 4:False,
                                 5:False,
@@ -49,12 +48,10 @@ class Game:
                                 12:False,
                                 }
 
-        self.now_player = 0
+        self.now_player = random.randrange(0, player_num - 1)
         time.sleep(1)
 
-        self.firstplayer = random.randrange(1,3)
-
-        print(f"\n첫 번째 플레이어는 Player {self.firstplayer}입니다.\n\n")
+        print(f"\n첫 번째 플레이어는 Player {self.now_player + 1}({self.players[self.now_player].player_name})입니다.\n\n")
         time.sleep(5)
 
         print("게임을 시작하겠습니다.\n\n")
@@ -111,7 +108,7 @@ class Game:
                     while True:
                         try:
                             c = int(input(f"{choice[0]} = 1 입력, {choice[1]} = 2 입력: "))
-                            c -= 1 
+                            c -= 1
                             if self.mountain_top[choice[c]]:
                                 print("이미 정상에 오른 등산로입니다.")
                                 time.sleep(1)
@@ -180,7 +177,7 @@ class Game:
                         n = 2*i - 1
                         if self.now_p[i] >= n:
                             self.now_p[i] = n
-                            self.map[i] = [0,0,0]
+                            self.map[i] = [0,0,0,0]
                             self.map[i][player.id] = n
                             self.mountain_top[i] = True
                             print(f"\n{i}칸 정상에 등반했습니다.\n")
@@ -189,7 +186,7 @@ class Game:
 
                         elif self.now_p[14-i] >= n:
                             self.now_p[14-i] = n
-                            self.map[14-i] = [0,0,0]
+                            self.map[14-i] = [0,0,0,0]
                             self.map[14-i][player.id] = n
                             self.mountain_top[14-i] = True
                             print(f"{14-i}칸 정상에 등반했습니다.\n")
@@ -229,6 +226,8 @@ class Game:
                     print(color2("B"), end='')
                 if self.map[i][2] == j+1:
                     print(color3("C"), end='')
+                if self.map[i][3] == j+1:
+                    print(color6("D"), end='')
                 if self.now_p[i] == j+1:
                     print("●", end='')
 
@@ -255,6 +254,8 @@ class Game:
                     print(color2("B"), end='')
                 if self.map[i][2] == j+1:
                     print(color3("C"), end='')
+                if self.map[i][3] == j+1:
+                    print(color6("D"), end='')
                 if self.now_p[i] == j+1:
                     print("●", end='')
 
@@ -265,16 +266,27 @@ class Game:
             
             print("\n")
 
-        print(color1(f"Player A ({self.p1.player_name}) : {self.p1.score}개 , ") + color2(f"Player B ({self.p2.player_name}) : {self.p2.score}개 , ") + color3(f"Player C ({self.p3.player_name}) : {self.p3.score}개\n"))
-        if self.now_player == 1:
-            a = "A"
-            print("현재 플레이어는 " + color1(f"Player {a}") + "입니다.\n")
-        elif self.now_player == 2:
-            a = "B"
-            print("현재 플레이어는 " + color2(f"Player {a}") + "입니다.\n")
+        if self.player_num == 2:
+            print(color1(f"Player A ({self.players[0].player_name}) : {self.players[0].score}개"))
+            print(color2(f"Player B ({self.players[1].player_name}) : {self.players[1].score}개"))
+        elif self.player_num == 3:
+            print(color1(f"Player A ({self.players[0].player_name}) : {self.players[0].score}개"))
+            print(color2(f"Player B ({self.players[1].player_name}) : {self.players[1].score}개"))
+            print(color3(f"Player C ({self.players[2].player_name}) : {self.players[2].score}개\n"))
         else:
-            a = "C"
-            print("현재 플레이어는 " + color3(f"Player {a}") + "입니다.\n")
+            print(color1(f"Player A ({self.players[0].player_name}) : {self.players[0].score}개"))
+            print(color2(f"Player B ({self.players[1].player_name}) : {self.players[1].score}개"))
+            print(color3(f"Player C ({self.players[2].player_name}) : {self.players[2].score}개"))
+            print(color6(f"Player D ({self.players[3].player_name}) : {self.players[3].score}개\n"))
+        
+        if self.now_player == 0:
+            print("현재 플레이어는 " + color1(f"Player A") + "입니다.\n")
+        elif self.now_player == 1:
+            print("현재 플레이어는 " + color2(f"Player B") + "입니다.\n")
+        elif self.now_player == 2:
+            print("현재 플레이어는 " + color3(f"Player C") + "입니다.\n")
+        else:
+            print("현재 플레이어는 " + color6(f"Player D") + "입니다.\n")
 
     def numberofp(self):
         cnt = 0
@@ -302,30 +314,36 @@ class Game:
     def checkwin(self, player: Player):
         if player.score >= WINSCORE:
             a = input(f"Player {player.id+1}이 승리하였습니다.")
+
+    def next_player(self):
+        self.now_player = (self.now_player + 1) % self.player_num
             
     def main(self):
-        self.now_player = self.firstplayer
-
         while True:
             time.sleep(1)
+
+            self.oneloop(self.players[self.now_player])
+            if self.checkwin(self.players[self.now_player]):
+                break
+            self.next_player()
             
-            if self.now_player == 1:
-                self.oneloop(self.p1)
-                if self.checkwin(self.p1):
-                    break
-                self.now_player += 1
+            # if self.now_player == 1:
+            #     self.oneloop(self.p1)
+            #     if self.checkwin(self.p1):
+            #         break
+            #     self.now_player += 1
             
-            elif self.now_player == 2:
-                self.oneloop(self.p2)
-                if self.checkwin(self.p2):
-                    break
-                self.now_player += 1
+            # elif self.now_player == 2:
+            #     self.oneloop(self.p2)
+            #     if self.checkwin(self.p2):
+            #         break
+            #     self.now_player += 1
             
-            else:
-                self.oneloop(self.p3)
-                if self.checkwin(self.p3):
-                    break
-                self.now_player = 1
+            # else:
+            #     self.oneloop(self.p3)
+            #     if self.checkwin(self.p3):
+            #         break
+            #     self.now_player = 1
 
 def main():
     p1 = Player(0)
